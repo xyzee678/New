@@ -2,613 +2,431 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Smart Goal Tracker Pro</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Goal Tracker</title>
     <style>
-        :root {
-            --primary-color: #3498db;
-            --success-color: #2ecc71;
-            --warning-color: #f39c12;
-            --danger-color: #e74c3c;
-            --secondary-color: #95a5a6;
-            --light-bg: #f5f7fa;
-            --card-bg: #ffffff;
-            --text-color: #2c3e50;
-            --text-light: #7f8c8d;
-            --border-color: #ddd;
-        }
-        
-        * {
-            box-sizing: border-box;
-        }
-        
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.6;
-            color: var(--text-color);
-            margin: 0;
-            padding: 0;
-            background-color: var(--light-bg);
-            -webkit-text-size-adjust: 100%;
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
         }
-        
-        .container {
-            max-width: 100%;
-            padding: 10px;
+        .page {
+            display: none;
         }
-        
-        .header {
+        .page.active {
+            display: block;
+        }
+        .nav {
             display: flex;
-            flex-direction: column;
-            margin-bottom: 15px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid var(--border-color);
-        }
-        
-        .date-time {
-            font-size: 0.9em;
-            color: var(--text-light);
-            margin-top: 5px;
-        }
-        
-        .section {
-            background: var(--card-bg);
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-            padding: 15px;
             margin-bottom: 20px;
-            overflow-x: auto;
+            background-color: #f0f0f0;
+            padding: 10px;
+            border-radius: 5px;
         }
-        
-        h1, h2, h3 {
-            color: var(--text-color);
-            margin-top: 0;
+        .nav button {
+            margin-right: 10px;
+            padding: 8px 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
         }
-        
-        h2 {
-            color: var(--primary-color);
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 10px;
-            font-size: 1.2rem;
+        .nav button:hover {
+            background-color: #45a049;
         }
-        
+        form {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        input, select {
+            margin: 8px 0;
+            padding: 8px;
+            width: 100%;
+            box-sizing: border-box;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
         table {
             width: 100%;
             border-collapse: collapse;
-            margin: 10px 0;
-            font-size: 0.9rem;
-        }
-        
-        th, td {
-            padding: 8px;
-            text-align: left;
-            border-bottom: 1px solid var(--border-color);
-            vertical-align: middle;
-            white-space: nowrap;
-        }
-        
-        th {
-            background-color: #f8f9fa;
-            font-weight: 600;
-            color: var(--text-color);
-            position: sticky;
-            top: 0;
-        }
-        
-        tr:hover {
-            background-color: #f5f5f5;
-        }
-        
-        input[type="text"], 
-        input[type="number"],
-        input[type="date"],
-        select {
-            width: 100%;
-            padding: 6px;
-            border: 1px solid var(--border-color);
-            border-radius: 4px;
-            box-sizing: border-box;
-            font-family: inherit;
-            font-size: 0.9rem;
-        }
-        
-        button {
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            padding: 6px 10px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 0.8rem;
-            transition: background-color 0.3s;
-            white-space: nowrap;
-        }
-        
-        button:hover {
-            opacity: 0.9;
-        }
-        
-        .button-danger {
-            background-color: var(--danger-color);
-        }
-        
-        .button-success {
-            background-color: var(--success-color);
-        }
-        
-        .button-secondary {
-            background-color: var(--secondary-color);
-        }
-        
-        .button-small {
-            padding: 4px 6px;
-            font-size: 0.7rem;
-        }
-        
-        .button-group {
-            display: flex;
-            gap: 8px;
-            margin-top: 15px;
-            flex-wrap: wrap;
-        }
-        
-        .progress-input {
-            display: flex;
-            gap: 5px;
-            align-items: center;
-        }
-        
-        .progress-input input {
-            flex: 1;
-            max-width: 50px;
-        }
-        
-        .status-pending {
-            color: var(--warning-color);
-            font-weight: 500;
-        }
-        
-        .status-in-progress {
-            color: var(--primary-color);
-            font-weight: 500;
-        }
-        
-        .status-completed {
-            color: var(--success-color);
-            font-weight: 500;
-        }
-        
-        .status-overdue {
-            color: var(--danger-color);
-            font-weight: 500;
-        }
-        
-        .status-behind {
-            color: #e67e22;
-            font-weight: 500;
-        }
-        
-        .status-ahead {
-            color: #27ae60;
-            font-weight: 500;
-        }
-        
-        .hidden {
-            display: none;
-        }
-        
-        .log-entry {
-            margin-bottom: 5px;
-            padding: 8px;
-            background-color: #f8f9fa;
-            border-radius: 4px;
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.8rem;
-        }
-        
-        .progress-bar-container {
-            width: 100%;
-            background-color: #ecf0f1;
-            border-radius: 4px;
-            margin-top: 5px;
-        }
-        
-        .progress-bar {
-            height: 6px;
-            background-color: var(--primary-color);
-            border-radius: 4px;
-            transition: width 0.3s;
-        }
-        
-        .tabs {
-            display: flex;
-            margin-bottom: 15px;
-            border-bottom: 1px solid var(--border-color);
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-        }
-        
-        .tab {
-            padding: 8px 15px;
-            cursor: pointer;
-            background-color: #f8f9fa;
-            border: 1px solid var(--border-color);
-            border-bottom: none;
-            border-radius: 4px 4px 0 0;
-            margin-right: 5px;
-            white-space: nowrap;
-            font-size: 0.9rem;
-        }
-        
-        .tab.active {
-            background-color: white;
-            border-bottom: 1px solid white;
-            margin-bottom: -1px;
-            font-weight: 600;
-        }
-        
-        .tab-content {
-            display: none;
-        }
-        
-        .tab-content.active {
-            display: block;
-        }
-        
-        .time-remaining {
-            font-size: 0.8rem;
-        }
-        
-        .positive {
-            color: var(--success-color);
-        }
-        
-        .negative {
-            color: var(--danger-color);
-        }
-        
-        .progress-rank {
-            font-weight: 600;
-            text-align: center;
-        }
-        
-        .rank-high { color: var(--success-color); }
-        .rank-medium { color: var(--warning-color); }
-        .rank-low { color: var(--danger-color); }
-        
-        .progress-cell {
-            min-width: 100px;
-        }
-        
-        .speed-cell {
-            min-width: 80px;
-        }
-        
-        .category-select {
-            min-width: 100px;
-        }
-        
-        .compact-view .goal-name {
-            font-weight: 600;
-        }
-        
-        .follow-up-highlight {
-            background-color: #fff9e6;
-        }
-        
-        .quick-links {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
             margin-top: 20px;
         }
-        
-        .quick-link-btn {
-            padding: 8px 12px;
-            background-color: #3498db;
-            color: white;
-            border-radius: 4px;
-            text-decoration: none;
-            font-size: 0.9rem;
-        }
-        
-        .formula-editor {
-            width: 100%;
-            height: 100px;
+        th, td {
+            border: 1px solid #ddd;
             padding: 8px;
-            border: 1px solid var(--border-color);
-            border-radius: 4px;
-            font-family: monospace;
+            text-align: left;
         }
-        
-        .today-btn {
-            margin-left: 10px;
-            padding: 2px 6px;
-            font-size: 0.7rem;
+        th {
+            background-color: #f2f2f2;
         }
-        
-        @media (max-width: 768px) {
-            .section {
-                padding: 10px;
-            }
-            
-            th, td {
-                padding: 6px;
-                font-size: 0.8rem;
-            }
-            
-            .button-group {
-                gap: 5px;
-            }
-            
-            button {
-                padding: 5px 8px;
-                font-size: 0.7rem;
-            }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        .editable {
+            cursor: pointer;
+        }
+        .editable:hover {
+            background-color: #f0f0f0;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>Smart Goal Tracker Pro</h1>
-            <div class="date-time">
-                <div id="currentDate">Loading date...</div>
-                <div id="currentTime">Loading time...</div>
-            </div>
-        </div>
-        
-        <div class="tabs">
-            <div class="tab active" data-tab="today">Progress Entry</div>
-            <div class="tab" data-tab="tracker">Goal Tracker</div>
-            <div class="tab" data-tab="logs">Progress Logs</div>
-            <div class="tab" data-tab="quicklinks">Quick Links</div>
-            <div class="tab" data-tab="settings">Settings</div>
-        </div>
-        
-        <div class="tab-content active" id="today">
-            <div class="section compact-view">
-                <h2>Update Progress for All Goals</h2>
-                <div class="button-group">
-                    <label>Entry Date: </label>
-                    <input type="date" id="progressEntryDate" value="">
-                </div>
-                <table id="todayTable">
-                    <thead>
-                        <tr>
-                            <th>Goal Name</th>
-                            <th>Category</th>
-                            <th>Progress Change</th>
-                            <th>Current Progress</th>
-                            <th>Total Progress</th>
-                            <th>Unit</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Rows will be added dynamically -->
-                    </tbody>
-                </table>
-                <div class="button-group">
-                    <button id="saveAllProgressBtn" class="button-success">💾 Save All Progress</button>
-                </div>
-            </div>
-        </div>
-        
-        <div class="tab-content" id="tracker">
-            <div class="section">
-                <div class="button-group">
-                    <select id="sortBySelect">
-                        <option value="name">Sort by Name</option>
-                        <option value="startDate">Sort by Start Date</option>
-                        <option value="endDate">Sort by End Date</option>
-                        <option value="progress">Sort by Progress</option>
-                        <option value="status">Sort by Status</option>
-                        <option value="category">Sort by Category</option>
-                    </select>
-                    <select id="sortOrderSelect">
-                        <option value="asc">Ascending</option>
-                        <option value="desc">Descending</option>
-                    </select>
-                    <button id="applySortBtn">Apply Sort</button>
-                </div>
-                
-                <table id="goalTable">
-                    <thead>
-                        <tr>
-                            <th>Goal Name</th>
-                            <th>Category</th>
-                            <th>Start Date <button class="today-btn" data-field="startDate">Today</button></th>
-                            <th>End Date <button class="today-btn" data-field="endDate">Today</button></th>
-                            <th>Follow-up Date</th>
-                            <th>Current Progress</th>
-                            <th>Total Progress</th>
-                            <th>Required Speed</th>
-                            <th>Current Speed</th>
-                            <th>Unit</th>
-                            <th>Repetition</th>
-                            <th>End Target</th>
-                            <th>Time Remaining</th>
-                            <th>Status</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Rows will be added dynamically -->
-                    </tbody>
-                </table>
-                
-                <div class="button-group">
-                    <button id="addGoalBtn" class="button-success">➕ Add New Goal</button>
-                    <button id="exportDataBtn" class="button-secondary">📤 Export All Data</button>
-                    <button id="importDataBtn" class="button-secondary">📥 Import All Data</button>
-                </div>
-            </div>
-        </div>
-        
-        <div class="tab-content" id="logs">
-            <div class="section">
-                <h2>Progress Logs</h2>
-                <div id="progressLogContainer"></div>
-            </div>
-        </div>
-        
-        <div class="tab-content" id="quicklinks">
-            <div class="section">
-                <h2>Quick Links</h2>
-                <div class="quick-links" id="quickLinksContainer">
-                    <!-- Links will be added dynamically -->
-                </div>
-                
-                <h3>Manage Quick Links</h3>
-                <div class="button-group">
-                    <button id="addQuickLinkBtn">Add New Link</button>
-                </div>
-                <table id="quickLinksTable">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>URL</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Rows will be added dynamically -->
-                    </tbody>
-                </table>
-            </div>
-        </div>
-        
-        <div class="tab-content" id="settings">
-            <div class="section">
-                <h2>Settings</h2>
-                
-                <h3>Custom Units</h3>
-                <div class="button-group">
-                    <button id="addUnitBtn">Add New Unit</button>
-                </div>
-                <table id="unitsTable">
-                    <thead>
-                        <tr>
-                            <th>Unit Name</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Rows will be added dynamically -->
-                    </tbody>
-                </table>
-                
-                <h3>Custom Formulas</h3>
-                <div class="button-group">
-                    <button id="addFormulaBtn">Add New Formula Column</button>
-                </div>
-                <table id="formulasTable">
-                    <thead>
-                        <tr>
-                            <th>Column Name</th>
-                            <th>Formula</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Rows will be added dynamically -->
-                    </tbody>
-                </table>
-                
-                <div id="formulaEditor" class="hidden">
-                    <h4>Edit Formula</h4>
-                    <p>Available variables: currentProgress, endTarget, daysRemaining, daysElapsed</p>
-                    <textarea id="formulaText" class="formula-editor" placeholder="Example: (currentProgress / endTarget) * 100"></textarea>
-                    <div class="button-group">
-                        <button id="saveFormulaBtn">Save Formula</button>
-                        <button id="cancelFormulaBtn">Cancel</button>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <div class="nav">
+        <button onclick="showPage('daily-entry')">Daily Entry</button>
+        <button onclick="showPage('add-goal')">Add Goal</button>
+        <button onclick="showPage('goals-list')">Goals List</button>
+        <button onclick="showPage('goal-logs')">Goal Logs</button>
     </div>
 
-    <input type="file" id="importFileInput" accept=".json" class="hidden">
+    <!-- Daily Entry Page -->
+    <div id="daily-entry" class="page active">
+        <h2>Daily Progress Entry</h2>
+        <form id="daily-entry-form">
+            <label for="goal-select">Select Goal:</label>
+            <select id="goal-select" required></select>
+            
+            <label for="progress-change">Progress Change (positive or negative):</label>
+            <input type="number" id="progress-change" step="0.01" required>
+            
+            <label for="entry-date">Date:</label>
+            <input type="date" id="entry-date" required>
+            
+            <button type="submit">Record Progress</button>
+        </form>
+    </div>
+
+    <!-- Add Goal Page -->
+    <div id="add-goal" class="page">
+        <h2>Add New Goal</h2>
+        <form id="add-goal-form">
+            <label for="goal-name">Goal Name:</label>
+            <input type="text" id="goal-name" required>
+            
+            <label for="start-date">Start Date:</label>
+            <input type="date" id="start-date" required>
+            
+            <label for="end-date">End Date:</label>
+            <input type="date" id="end-date" required>
+            
+            <label for="target">Target Value:</label>
+            <input type="number" id="target" step="0.01" required>
+            
+            <label for="unit">Unit:</label>
+            <input type="text" id="unit" required>
+            
+            <label for="recurrence">Recurrence:</label>
+            <select id="recurrence" required>
+                <option value="daily">Daily</option>
+                <option value="weekly">Weekly</option>
+                <option value="monthly">Monthly</option>
+                <option value="yearly">Yearly</option>
+            </select>
+            
+            <button type="submit">Add Goal</button>
+        </form>
+    </div>
+
+    <!-- Goals List Page -->
+    <div id="goals-list" class="page">
+        <h2>Goals List</h2>
+        <table id="goals-table">
+            <thead>
+                <tr>
+                    <th>Goal Name</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                    <th>Target</th>
+                    <th>Current Progress</th>
+                    <th>Unit</th>
+                    <th>Recurrence</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <!-- Goal Logs Page -->
+    <div id="goal-logs" class="page">
+        <h2>Goal Logs</h2>
+        <table id="logs-table">
+            <thead>
+                <tr>
+                    <th>Timestamp</th>
+                    <th>Goal Name</th>
+                    <th>Action</th>
+                    <th>Details</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
 
     <script>
+        // Data storage
+        let goals = JSON.parse(localStorage.getItem('goals')) || [];
+        let logs = JSON.parse(localStorage.getItem('logs')) || [];
+
+        // Initialize the app
         document.addEventListener('DOMContentLoaded', function() {
-            // Initialize with sample data
-            let goals = JSON.parse(localStorage.getItem('goals')) || [
-                {
-                    id: 1,
-                    name: "Walking",
-                    category: "Fitness",
-                    startDate: formatDate(new Date()),
-                    endDate: formatDate(new Date(new Date().setFullYear(new Date().getFullYear() + 1))),
-                    followUpDate: getNextFollowUpDate(formatDate(new Date()), "weekly"),
-                    currentProgress: 25,
-                    totalProgress: 25,
-                    unit: "km",
-                    repetition: "weekly",
-                    endTarget: 100,
-                    lastUpdated: "",
-                    history: []
-                },
-                {
-                    id: 2,
-                    name: "Writing",
-                    category: "Creative",
-                    startDate: formatDate(new Date()),
-                    endDate: formatDate(new Date(new Date().setMonth(new Date().getMonth() + 6))),
-                    followUpDate: getNextFollowUpDate(formatDate(new Date()), "daily"),
-                    currentProgress: 8,
-                    totalProgress: 8,
-                    unit: "pages",
-                    repetition: "daily",
-                    endTarget: 100,
-                    lastUpdated: "",
-                    history: []
-                },
-                {
-                    id: 3,
-                    name: "Reading",
-                    category: "Learning",
-                    startDate: formatDate(new Date()),
-                    endDate: formatDate(new Date(new Date().setFullYear(new Date().getFullYear() + 1))),
-                    followUpDate: getNextFollowUpDate(formatDate(new Date()), "monthly"),
-                    currentProgress: 3,
-                    totalProgress: 3,
-                    unit: "books",
-                    repetition: "monthly",
-                    endTarget: 12,
-                    lastUpdated: "",
-                    history: []
-                }
-            ];
+            // Set default date for entry date to today
+            document.getElementById('entry-date').valueAsDate = new Date();
             
-            let logs = JSON.parse(localStorage.getItem('logs')) || [];
-            let categories = JSON.parse(localStorage.getItem('categories')) || ["Fitness", "Creative", "Learning", "Career", "Personal"];
-            let units = JSON.parse(localStorage.getItem('units')) || ["km", "miles", "pages", "books", "hours", "units", "days", "minutes"];
-            let quickLinks = JSON.parse(localStorage.getItem('quickLinks')) || [
-                { name: "Google", url: "https://google.com" },
-                { name: "GitHub", url: "https://github.com" }
-            ];
-            let customColumns = JSON.parse(localStorage.getItem('customColumns')) || [];
+            // Load goals into dropdown
+            updateGoalDropdown();
+            renderGoalsTable();
+            renderLogsTable();
             
-            // Initialize UI
-            updateDateTime();
-            setInterval(updateDateTime, 1000);
-            renderGoalTable();
-            renderTodayTable();
-            renderLogs();
-            renderQuickLinks();
-            renderUnitsTable();
-            renderFormulasTable();
+            // Form event listeners
+            document.getElementById('add-goal-form').addEventListener('submit', addGoal);
+            document.getElementById('daily-entry-form').addEventListener('submit', recordProgress);
+        });
+
+        // Page navigation
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            document.getElementById(pageId).classList.add('active');
+        }
+
+        // Add a new goal
+        function addGoal(e) {
+            e.preventDefault();
             
-            // Set today's date as default for progress entry
-            document.getElementById('progressEntryDate').value = formatDate(new Date());
+            const goal = {
+                id: Date.now(),
+                name: document.getElementById('goal-name').value,
+                startDate: document.getElementById('start-date').value,
+                endDate: document.getElementById('end-date').value,
+                target: parseFloat(document.getElementById('target').value),
+                currentProgress: 0,
+                unit: document.getElementById('unit').value,
+                recurrence: document.getElementById('recurrence').value
+            };
             
-            // Save data to localStorage on changes
-            function saveData() {
-                localStorage.setItem('goals', JSON.stringify(goals));
-                localStorage.setItem('logs', JSON.stringify(logs));
-                localStorage.setItem('categories', JSON.stringify(categories));
-                localStorage.setItem('units', JSON.stringify(units));
-                localStorage.setItem('quickLinks', JSON.stringify(
+            goals.push(goal);
+            saveData();
+            
+            // Log the addition
+            addLog('Goal Added', `Added goal: ${goal.name}`);
+            
+            // Reset form
+            e.target.reset();
+            
+            // Update UI
+            updateGoalDropdown();
+            renderGoalsTable();
+            
+            // Show goals list
+            showPage('goals-list');
+        }
+
+        // Record progress for a goal
+        function recordProgress(e) {
+            e.preventDefault();
+            
+            const goalId = parseInt(document.getElementById('goal-select').value);
+            const change = parseFloat(document.getElementById('progress-change').value);
+            const entryDate = document.getElementById('entry-date').value;
+            
+            const goal = goals.find(g => g.id === goalId);
+            if (!goal) return;
+            
+            // Update progress
+            goal.currentProgress += change;
+            
+            // Log the progress
+            addLog('Progress Updated', 
+                   `Updated ${goal.name}: ${change > 0 ? '+' : ''}${change} ${goal.unit}`, 
+                   entryDate);
+            
+            saveData();
+            
+            // Reset form
+            document.getElementById('progress-change').value = '';
+            document.getElementById('entry-date').valueAsDate = new Date();
+            
+            // Update UI
+            renderGoalsTable();
+        }
+
+        // Add a log entry
+        function addLog(action, details, customDate = null) {
+            const log = {
+                timestamp: customDate ? new Date(customDate).toLocaleString() : new Date().toLocaleString(),
+                goalName: action.includes('goal') ? details.split(':')[1].trim() : details.split(':')[0].trim(),
+                action: action,
+                details: details
+            };
+            
+            logs.unshift(log);
+            saveData();
+            renderLogsTable();
+        }
+
+        // Update the goal dropdown
+        function updateGoalDropdown() {
+            const select = document.getElementById('goal-select');
+            select.innerHTML = '';
+            
+            if (goals.length === 0) {
+                const option = document.createElement('option');
+                option.value = '';
+                option.textContent = 'No goals available';
+                select.appendChild(option);
+                return;
+            }
+            
+            goals.forEach(goal => {
+                const option = document.createElement('option');
+                option.value = goal.id;
+                option.textContent = `${goal.name} (${goal.currentProgress}/${goal.target} ${goal.unit})`;
+                select.appendChild(option);
+            });
+        }
+
+        // Render the goals table
+        function renderGoalsTable() {
+            const tbody = document.querySelector('#goals-table tbody');
+            tbody.innerHTML = '';
+            
+            if (goals.length === 0) {
+                const row = document.createElement('tr');
+                row.innerHTML = '<td colspan="8">No goals added yet</td>';
+                tbody.appendChild(row);
+                return;
+            }
+            
+            goals.forEach(goal => {
+                const row = document.createElement('tr');
+                
+                // Make these cells editable
+                const nameCell = createEditableCell(goal.name, 'name', goal.id);
+                const startDateCell = createEditableCell(goal.startDate, 'startDate', goal.id, 'date');
+                const endDateCell = createEditableCell(goal.endDate, 'endDate', goal.id, 'date');
+                const targetCell = createEditableCell(goal.target, 'target', goal.id, 'number');
+                const unitCell = createEditableCell(goal.unit, 'unit', goal.id);
+                const recurrenceCell = createEditableCell(goal.recurrence, 'recurrence', goal.id);
+                
+                row.innerHTML = `
+                    <td>${nameCell}</td>
+                    <td>${startDateCell}</td>
+                    <td>${endDateCell}</td>
+                    <td>${targetCell}</td>
+                    <td>${goal.currentProgress}</td>
+                    <td>${unitCell}</td>
+                    <td>${recurrenceCell}</td>
+                    <td><button onclick="deleteGoal(${goal.id})">Delete</button></td>
+                `;
+                
+                tbody.appendChild(row);
+            });
+        }
+
+        // Create an editable cell
+        function createEditableCell(value, field, goalId, type = 'text') {
+            if (type === 'date') {
+                return `<input type="date" value="${value}" onchange="updateGoalField(${goalId}, '${field}', this.value)">`;
+            } else if (type === 'number') {
+                return `<input type="number" step="0.01" value="${value}" onchange="updateGoalField(${goalId}, '${field}', this.value)">`;
+            } else {
+                return `<span class="editable" onclick="makeCellEditable(this, ${goalId}, '${field}')">${value}</span>`;
+            }
+        }
+
+        // Make a cell editable
+        function makeCellEditable(element, goalId, field) {
+            const currentValue = element.textContent;
+            element.innerHTML = `<input type="text" value="${currentValue}" 
+                onblur="updateGoalField(${goalId}, '${field}', this.value)"
+                onkeypress="if(event.keyCode===13) this.blur()">`;
+            element.querySelector('input').focus();
+        }
+
+        // Update a goal field
+        function updateGoalField(goalId, field, value) {
+            const goal = goals.find(g => g.id === goalId);
+            if (!goal) return;
+            
+            if (field === 'target' || field === 'currentProgress') {
+                value = parseFloat(value);
+            }
+            
+            goal[field] = value;
+            saveData();
+            
+            // Log the update
+            addLog('Goal Updated', `Updated ${goal.name}'s ${field} to ${value}`);
+            
+            // Update UI
+            renderGoalsTable();
+            updateGoalDropdown();
+        }
+
+        // Delete a goal
+        function deleteGoal(goalId) {
+            if (!confirm('Are you sure you want to delete this goal?')) return;
+            
+            const goalIndex = goals.findIndex(g => g.id === goalId);
+            if (goalIndex === -1) return;
+            
+            const goalName = goals[goalIndex].name;
+            goals.splice(goalIndex, 1);
+            saveData();
+            
+            // Log the deletion
+            addLog('Goal Deleted', `Deleted goal: ${goalName}`);
+            
+            // Update UI
+            updateGoalDropdown();
+            renderGoalsTable();
+        }
+
+        // Render the logs table
+        function renderLogsTable() {
+            const tbody = document.querySelector('#logs-table tbody');
+            tbody.innerHTML = '';
+            
+            if (logs.length === 0) {
+                const row = document.createElement('tr');
+                row.innerHTML = '<td colspan="4">No logs yet</td>';
+                tbody.appendChild(row);
+                return;
+            }
+            
+            logs.forEach(log => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${log.timestamp}</td>
+                    <td>${log.goalName}</td>
+                    <td>${log.action}</td>
+                    <td>${log.details}</td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        // Save data to localStorage
+        function saveData() {
+            localStorage.setItem('goals', JSON.stringify(goals));
+            localStorage.setItem('logs', JSON.stringify(logs));
+        }
+    </script>
+</body>
+</html>
